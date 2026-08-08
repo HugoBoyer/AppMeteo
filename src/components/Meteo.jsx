@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import "./Meteo.css"
 import search_icon from "../assets/chercher.png"
 import brume_icon from "../assets/brume.png"
@@ -12,7 +12,7 @@ import tempete_icon from "../assets/tempete.png"
 import couvert_icon from "../assets/couvert.png"
 
 const Meteo = () => {
-
+ const inputRef = useRef()
  const [meteoData, setMeteoData] = useState(false)
  const allIcons = {
     "01d": soleil_icon,
@@ -33,11 +33,22 @@ const Meteo = () => {
     "13n": neigeux_icon,
  }
  const search = async (city) => {
+    if(city === "") {
+        alert("Entrer une ville");
+        return;
+    }
     try {
         const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
     
         const response = await fetch(url);
         const data = await response.json();
+
+        //Si la réponse n'est pas correcte, on affiche un message d'erreur
+        if(!response.ok) {
+            alert(data.message);
+            return;
+        }
+
         console.log(data);
         const icon = allIcons[data.weather[0].icon] || soleil_icon;
         setMeteoData({
@@ -49,7 +60,8 @@ const Meteo = () => {
         })
 
     } catch (error) {
-
+        setMeteoData(false);
+        console.error("Erreur de récupération des données météo")
     }
  }
 
@@ -60,9 +72,10 @@ const Meteo = () => {
   return (
     <div className='meteo'>
         <div className="search-bar">
-            <input type="text" placeholder='Search'/>
-            <img src={search_icon} alt=""/>
+            <input ref={inputRef} type="text" placeholder='Search'/>
+            <img src={search_icon} alt="" onClick={() => search(inputRef.current.value)}/>
         </div>
+        {meteoData?<>  
         <img src={meteoData.icon} alt="" className='meteo-icon'/>
         <p className='temperature'>{meteoData.temperature}°C</p>
         <p className='location'>{meteoData.location}</p>
@@ -82,6 +95,8 @@ const Meteo = () => {
                 </div>
             </div>
         </div>
+        </>:<></>}
+      
     </div>
   )
 }
