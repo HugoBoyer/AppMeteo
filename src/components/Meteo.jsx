@@ -54,7 +54,7 @@ const Meteo = () => {
  }
 
  useEffect(() => {
-    search("Marikina")
+    search("London")
  }, [])
 
   return (
@@ -63,7 +63,7 @@ const Meteo = () => {
             <input type="text" placeholder='Search'/>
             <img src={search_icon} alt=""/>
         </div>
-        <img src={soleil_icon} alt="" className='meteo-icon'/>
+        <img src={meteoData.icon} alt="" className='meteo-icon'/>
         <p className='temperature'>{meteoData.temperature}°C</p>
         <p className='location'>{meteoData.location}</p>
         <div className="meteo-data">
