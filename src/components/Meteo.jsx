@@ -41,7 +41,7 @@ const Meteo = () => {
         console.log(data);
         const icon = allIcons[data.weather[0].icon] || soleil_icon;
         setMeteoData({
-            himidity: data.main.himidity,
+            humidity: data.main.humidity,
             windSpeed: data.wind.speed,
             temperature: Math.floor(data.main.temp),
             location: data.name,
@@ -54,7 +54,7 @@ const Meteo = () => {
  }
 
  useEffect(() => {
-    search("London")
+    search("Marikina")
  }, [])
 
   return (
